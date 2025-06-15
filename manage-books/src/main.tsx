@@ -1,15 +1,26 @@
-// IndexedDB helpers are available from db.js
-function BookApp() {
-  const [db, setDb] = React.useState(null);
-  const [books, setBooks] = React.useState([]);
-  const [title, setTitle] = React.useState('');
-  const [author, setAuthor] = React.useState('');
+import React, { useEffect, useState, FormEvent } from 'react';
+import ReactDOM from 'react-dom/client';
+import { openDB, getAllBooks, addBook, deleteBook } from './db';
 
-  React.useEffect(() => {
-    openDB().then(db => {
-      setDb(db);
-      return getAllBooks(db);
-    }).then(setBooks);
+interface Book {
+  id?: number;
+  title: string;
+  author: string;
+}
+
+function BookApp() {
+  const [db, setDb] = useState<IDBDatabase | null>(null);
+  const [books, setBooks] = useState<Book[]>([]);
+  const [title, setTitle] = useState('');
+  const [author, setAuthor] = useState('');
+
+  useEffect(() => {
+    openDB()
+      .then(db => {
+        setDb(db);
+        return getAllBooks(db);
+      })
+      .then(setBooks);
   }, []);
 
   const refresh = () => {
@@ -17,7 +28,7 @@ function BookApp() {
     getAllBooks(db).then(setBooks);
   };
 
-  const handleAdd = e => {
+  const handleAdd = (e: FormEvent) => {
     e.preventDefault();
     if (!db || !title || !author) return;
     addBook(db, { title, author }).then(() => {
@@ -27,7 +38,8 @@ function BookApp() {
     });
   };
 
-  const handleDelete = id => {
+  const handleDelete = (id: number) => {
+    if (!db) return;
     deleteBook(db, id).then(refresh);
   };
 
@@ -51,7 +63,7 @@ function BookApp() {
         {books.map(book => (
           <li key={book.id}>
             {book.title} by {book.author}{' '}
-            <button onClick={() => handleDelete(book.id)}>Delete</button>
+            <button onClick={() => handleDelete(book.id!)}>Delete</button>
           </li>
         ))}
       </ul>
@@ -59,7 +71,8 @@ function BookApp() {
   );
 }
 
-ReactDOM.render(
-  <BookApp />,
-  document.getElementById('root')
+ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
+  <React.StrictMode>
+    <BookApp />
+  </React.StrictMode>
 );

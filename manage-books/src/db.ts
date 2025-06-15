@@ -1,7 +1,7 @@
 const DB_NAME = 'libraryDB';
 const STORE_NAME = 'books';
 
-function openDB() {
+export function openDB(): Promise<IDBDatabase> {
   return new Promise((resolve, reject) => {
     const request = indexedDB.open(DB_NAME, 1);
     request.onerror = () => reject(request.error);
@@ -15,7 +15,7 @@ function openDB() {
   });
 }
 
-function getAllBooks(db) {
+export function getAllBooks(db: IDBDatabase): Promise<any[]> {
   return new Promise((resolve, reject) => {
     const tx = db.transaction(STORE_NAME, 'readonly');
     const store = tx.objectStore(STORE_NAME);
@@ -25,7 +25,7 @@ function getAllBooks(db) {
   });
 }
 
-function addBook(db, book) {
+export function addBook(db: IDBDatabase, book: {title: string; author: string}): Promise<IDBValidKey> {
   return new Promise((resolve, reject) => {
     const tx = db.transaction(STORE_NAME, 'readwrite');
     const store = tx.objectStore(STORE_NAME);
@@ -35,7 +35,7 @@ function addBook(db, book) {
   });
 }
 
-function deleteBook(db, id) {
+export function deleteBook(db: IDBDatabase, id: IDBValidKey): Promise<void> {
   return new Promise((resolve, reject) => {
     const tx = db.transaction(STORE_NAME, 'readwrite');
     const store = tx.objectStore(STORE_NAME);

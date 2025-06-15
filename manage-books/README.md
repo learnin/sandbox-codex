@@ -1,13 +1,19 @@
 # Manage Books
 
-This is a simple library management application built with React.
-It uses the browser's IndexedDB to store a list of books locally.
+This is a simple library management application built with React and TypeScript.
+It uses the browser's IndexedDB to store a list of books locally and is built using Vite.
 
 ## Setup
 Install dependencies with `npm install` from the `manage-books` directory.
 
 ## Usage
-After installing dependencies, open `index.html` in a modern browser. The app
-uses Babel in the browser to compile JSX, so no build step is required. You can
-add books with a title and author. The data is stored in IndexedDB so it
-persists between page reloads.
+To start developing run:
+
+```
+npm run dev
+```
+
+This launches Vite's dev server. Open the printed URL in your browser.
+Add books with a title and author. The data persists in IndexedDB between reloads.
+
+To create a production build run `npm run build`.
